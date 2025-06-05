@@ -3,6 +3,7 @@ import jsPDF from 'jspdf'
 import { AlertTriangle, CheckCircle2, Download, Globe, LogOut, Shield } from 'lucide-react'
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react'
 import { config } from './config'
+import api from './services/api'
 
 // Lazy load components
 const Auth = lazy(() => import('./components/Auth'))
@@ -76,7 +77,7 @@ function App() {
 
   // Debounced URL info fetcher
   const debouncedFetchUrlInfo = useCallback(
-    debounce(async (inputUrl, token) => {
+    debounce(async (inputUrl) => {
       if (!inputUrl) return;
 
       const formattedUrl = formatAndValidateUrl(inputUrl);
@@ -86,11 +87,8 @@ function App() {
       setUrlInfo(null);
       
       try {
-        const response = await axios.get(`${config.apiUrl}/api/url-info`, {
-          params: { url: formattedUrl },
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
+        const response = await api.get('/api/url-info', {
+          params: { url: formattedUrl }
         });
         setUrlInfo(response.data);
       } catch (err) {
@@ -114,8 +112,8 @@ function App() {
     const newUrl = e.target.value;
     setUrl(newUrl);
     
-    if (newUrl && user?.token) {
-      debouncedFetchUrlInfo(newUrl, user.token);
+    if (newUrl) {
+      debouncedFetchUrlInfo(newUrl);
     } else {
       setUrlInfo(null);
     }
@@ -133,17 +131,11 @@ function App() {
     setResult(null)
 
     try {
-      const response = await axios.post(`${config.apiUrl}/api/predict`, 
-        { url: formattedUrl },
-        {
-          headers: {
-            'Authorization': `Bearer ${user.token}`
-          }
-        }
-      )
+      const response = await api.post('/api/predict', { url: formattedUrl });
       setResult(response.data)
     } catch (err) {
-      setError(err.response?.data?.error || 'An error occurred')
+      console.error('URL check error:', err);
+      setError(err.response?.data?.error || 'An error occurred while checking the URL');
     } finally {
       setLoading(false)
     }
