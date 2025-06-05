@@ -23,9 +23,10 @@ from backend.utils.url_features import (ESSENTIAL_FEATURES,
 app = Flask(__name__)
 CORS(app, resources={
     r"/*": {
-        "origins": ["https://phisshield.onrender.com"],
+        "origins": ["https://phisshield.onrender.com", "http://localhost:5173"],
         "methods": ["GET", "POST", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"]
+        "allow_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True
     }
 })
 
@@ -100,11 +101,13 @@ def register():
         if User.query.filter_by(email=email).first():
             return jsonify({'error': 'Email already exists'}), 400
 
+        # Create new user
         hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
         new_user = User(username=username, email=email, password_hash=hashed_password)
         db.session.add(new_user)
         db.session.commit()
 
+        # Generate token
         token = generate_token(new_user.id)
         return jsonify({
             'token': token,
@@ -118,15 +121,24 @@ def register():
 def login():
     try:
         data = request.get_json()
-        user = User.query.filter_by(username=data.get('username')).first()
+        username = data.get('username')
+        password = data.get('password')
 
-        if user and bcrypt.check_password_hash(user.password_hash, data.get('password')):
-            token = generate_token(user.id)
-            return jsonify({
-                'token': token,
-                'username': user.username
-            })
-        return jsonify({'error': 'Invalid credentials'}), 401
+        # Find user by username
+        user = User.query.filter_by(username=username).first()
+        if not user:
+            return jsonify({'error': 'Invalid username or password'}), 401
+
+        # Check password
+        if not bcrypt.check_password_hash(user.password_hash, password):
+            return jsonify({'error': 'Invalid username or password'}), 401
+
+        # Generate token
+        token = generate_token(user.id)
+        return jsonify({
+            'token': token,
+            'username': user.username
+        }), 200
     except Exception as e:
         log_error(e, "Login failed")
         return jsonify({'error': 'Login failed'}), 500
