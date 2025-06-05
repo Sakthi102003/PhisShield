@@ -17,7 +17,12 @@ const Auth = ({ onLogin }) => {
 
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-      const response = await axios.post(`${config.apiUrl}${endpoint}`, formData);
+      const response = await axios.post(`${config.apiUrl}${endpoint}`, formData, {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        withCredentials: true
+      });
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);
@@ -25,6 +30,8 @@ const Auth = ({ onLogin }) => {
         onLogin(response.data);
       }
     } catch (err) {
+      console.error('Auth error:', err);
+      console.error('Response:', err.response);
       setError(err.response?.data?.error || 'An error occurred');
     }
   };

@@ -26,9 +26,19 @@ CORS(app, resources={
         "origins": ["https://phisshield.onrender.com", "http://localhost:5173"],
         "methods": ["GET", "POST", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
+        "expose_headers": ["Content-Type", "Authorization"],
+        "supports_credentials": True,
+        "allow_credentials": True
     }
 })
+
+@app.after_request
+def after_request(response):
+    response.headers.add('Access-Control-Allow-Origin', request.headers.get('Origin', '*'))
+    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
+    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
+    response.headers.add('Access-Control-Allow-Credentials', 'true')
+    return response
 
 # Configuration
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')  # Change in production
@@ -121,6 +131,7 @@ def register():
 def login():
     try:
         data = request.get_json()
+        logger.info(f"Login attempt for username: {data.get('username')}")
         username = data.get('username')
         password = data.get('password')
 
