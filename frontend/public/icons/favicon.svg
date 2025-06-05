@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <!-- Shield background -->
+    <path d="M16 2L4 7V15C4 22.1797 9.10547 28.4531 16 30C22.8945 28.4531 28 22.1797 28 15V7L16 2Z" fill="#1E90FF"/>
+    <!-- Checkmark -->
+    <path d="M14 20L9 15L10.41 13.59L14 17.17L21.59 9.58L23 11L14 20Z" fill="white"/>
+</svg>

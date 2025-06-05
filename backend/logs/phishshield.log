@@ -1,0 +1,153 @@
+2025-06-04 23:06:24,913 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:06:41,570 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:06:43,749 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:06:47,016 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:10:20,442 - phishshield - INFO - Prediction: 0, Probability: [0.9971402  0.00285975]
+2025-06-04 23:10:20,442 - phishshield - INFO - Prediction complete for https://www.youtube.com/: legitimate
+2025-06-04 23:12:09,982 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:12:14,075 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:12:16,107 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:12:20,706 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:12:37,115 - phishshield - INFO - Prediction: 0, Probability: [0.9971402  0.00285975]
+2025-06-04 23:12:37,117 - phishshield - INFO - Prediction complete for https://www.cricbuzz.com/: legitimate
+2025-06-04 23:12:54,139 - phishshield - INFO - Prediction: 0, Probability: [0.9971402  0.00285975]
+2025-06-04 23:12:54,140 - phishshield - INFO - Prediction complete for https://www.youtube.com/: legitimate
+2025-06-04 23:28:02,958 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:28:07,546 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:28:10,396 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:28:13,292 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:31:57,193 - phishshield - INFO - Prediction complete for https://www.cricbuzz.com/: legitimate
+2025-06-04 23:33:31,373 - phishshield - INFO - Prediction complete for https://medium.com/p/9a3276a3b426/edit: legitimate
+2025-06-04 23:33:45,215 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:33:48,125 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:34:23,095 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:34:26,363 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:36:28,272 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:36:31,303 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:37:29,089 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:37:31,986 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:39:33,885 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:39:36,627 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:39:38,967 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:39:41,855 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:40:35,587 - phishshield - INFO - Prediction complete for https://www.cricbuzz.com/: legitimate
+2025-06-04 23:41:46,137 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:41:48,997 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:42:17,770 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-04 23:42:20,348 - phishshield - INFO - Model loaded successfully
+2025-06-04 23:43:33,193 - phishshield - INFO - Prediction complete for https://amaz0n-security.com: phishing
+2025-06-05 12:20:19,497 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:20:34,501 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:20:36,923 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:20:42,979 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:21:13,929 - phishshield - INFO - Prediction complete for https://education.github.com/auth/githubber/callback?browser_session_id=1bed4e3235ae0fc53b5652ef33cf9e7ae578c66010753ed80e32a902c6f3f899&code=aa1e5fba9d9ad0ce82ab&state=63b2ddf28b969eaaa5dc299cf61f2c21db496e27fdbd8590: legitimate
+2025-06-05 12:22:30,925 - phishshield - INFO - Prediction complete for hausapotheke24.de: legitimate
+2025-06-05 12:22:33,064 - phishshield - INFO - Prediction complete for hausapotheke24.de: legitimate
+2025-06-05 12:23:19,685 - phishshield - INFO - Prediction complete for pharmacy-weightloss.net: phishing
+2025-06-05 12:23:43,320 - phishshield - INFO - Prediction complete for helenkgilbert.store: legitimate
+2025-06-05 12:23:59,987 - phishshield - INFO - Prediction complete for medizin-rezeptfrei.net: phishing
+2025-06-05 12:26:07,088 - phishshield - INFO - Prediction complete for medizin-rezeptfrei.net: phishing
+2025-06-05 12:27:13,645 - phishshield - INFO - Prediction complete for apotheke-rezeptfrei.eu: phishing
+2025-06-05 12:27:35,977 - phishshield - INFO - Prediction complete for health-at.live: phishing
+2025-06-05 12:27:48,793 - phishshield - INFO - Prediction complete for medikament24.net: legitimate
+2025-06-05 12:28:14,143 - phishshield - INFO - Prediction complete for osterreichapotheke.at: legitimate
+2025-06-05 12:28:34,125 - phishshield - INFO - Prediction complete for pharmedio.de: legitimate
+2025-06-05 12:30:49,741 - phishshield - INFO - Prediction complete for faceb00k.com: legitimate
+2025-06-05 12:31:02,980 - phishshield - INFO - Prediction complete for faceb00k.xyz: legitimate
+2025-06-05 12:31:15,253 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:31:30,978 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:31:42,044 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:31:44,868 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:31:52,756 - phishshield - INFO - Prediction complete for cricbuzz.com: legitimate
+2025-06-05 12:33:32,735 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:33:35,374 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:34:48,055 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:34:50,530 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:34:57,223 - phishshield - INFO - Prediction complete for googlr.com: legitimate
+2025-06-05 12:35:01,767 - phishshield - INFO - Prediction complete for google.com: legitimate
+2025-06-05 12:35:03,347 - phishshield - INFO - Prediction complete for google.com: legitimate
+2025-06-05 12:35:04,306 - phishshield - INFO - Prediction complete for google.com: legitimate
+2025-06-05 12:35:38,330 - phishshield - INFO - Prediction complete for google.com: legitimate
+2025-06-05 12:35:47,554 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:35:50,415 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:36:03,825 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:36:06,595 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:37:54,466 - phishshield - INFO - Loading model from: D:\Phishing website Detector\model
+2025-06-05 12:37:57,585 - phishshield - INFO - Model loaded successfully
+2025-06-05 12:38:04,639 - phishshield - INFO - Fetching URL info for: https://github.com/torvalds
+2025-06-05 12:38:07,527 - phishshield - INFO - Prediction complete for https://github.com/torvalds: legitimate
+2025-06-05 12:38:23,180 - phishshield - INFO - Fetching URL info for: https://pentestingexams.com/product/certified-red-team-professional/
+2025-06-05 12:38:24,543 - phishshield - INFO - Prediction complete for https://pentestingexams.com/product/certified-red-team-professional/: phishing
+2025-06-05 12:38:26,778 - phishshield - INFO - Prediction complete for https://pentestingexams.com/product/certified-red-team-professional/: phishing
+2025-06-05 12:38:44,661 - phishshield - INFO - Fetching URL info for: https://iitmpravartak.org.in/jobseekers
+2025-06-05 12:38:46,247 - phishshield - INFO - Prediction complete for https://iitmpravartak.org.in/jobseekers: legitimate
+2025-06-05 12:39:49,546 - phishshield - INFO - Fetching URL info for: https://education.github.com/auth/failure?message=csrf_detected&origin=&strategy=githubber
+2025-06-05 12:39:52,271 - phishshield - INFO - Prediction complete for https://education.github.com/auth/failure?message=csrf_detected&origin=&strategy=githubber: legitimate
+2025-06-05 12:39:55,265 - phishshield - INFO - Prediction complete for https://education.github.com/auth/failure?message=csrf_detected&origin=&strategy=githubber: legitimate
+2025-06-05 12:39:56,199 - phishshield - INFO - Prediction complete for https://education.github.com/auth/failure?message=csrf_detected&origin=&strategy=githubber: legitimate
+2025-06-05 12:39:56,708 - phishshield - INFO - Prediction complete for https://education.github.com/auth/failure?message=csrf_detected&origin=&strategy=githubber: legitimate
+2025-06-05 12:39:57,949 - phishshield - INFO - Prediction complete for https://education.github.com/auth/failure?message=csrf_detected&origin=&strategy=githubber: legitimate
+2025-06-05 12:44:20,691 - phishshield - INFO - Prediction complete for cricbuzz.xyz: legitimate
+2025-06-05 12:44:37,379 - phishshield - INFO - Prediction complete for cricbuzz.com: legitimate
+2025-06-05 12:45:33,585 - phishshield - INFO - Fetching URL info for: https://www.cricbuzz.com/
+2025-06-05 12:45:39,821 - phishshield - INFO - Fetching URL info for: https://www.cricbuzz.com
+2025-06-05 12:45:40,402 - phishshield - INFO - Fetching URL info for: https://www.cricbuzz.co
+2025-06-05 12:45:40,987 - phishshield - INFO - Fetching URL info for: https://www.cricbuzz.c
+2025-06-05 12:45:41,071 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cricbuzz.c', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFE164D0>: Failed to resolve 'www.cricbuzz.c' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:41,248 - phishshield - INFO - Fetching URL info for: https://www.cricbuzz.
+2025-06-05 12:45:41,289 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cricbuzz.', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFEB4CD0>: Failed to resolve 'www.cricbuzz' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:41,390 - phishshield - INFO - Fetching URL info for: https://www.cricbuzz
+2025-06-05 12:45:41,402 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cricbuzz', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFFBFB50>: Failed to resolve 'www.cricbuzz' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:41,692 - phishshield - INFO - Fetching URL info for: https://www.cricbuz
+2025-06-05 12:45:41,708 - phishshield - INFO - Fetching URL info for: https://www.cricbu
+2025-06-05 12:45:41,718 - phishshield - INFO - Fetching URL info for: https://www.cricb
+2025-06-05 12:45:41,787 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cricbuz', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFC29150>: Failed to resolve 'www.cricbuz' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:41,789 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cricbu', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1F00A91D0>: Failed to resolve 'www.cricbu' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:41,789 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cricb', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFDDD390>: Failed to resolve 'www.cricb' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:41,999 - phishshield - INFO - Fetching URL info for: https://www.cric
+2025-06-05 12:45:42,018 - phishshield - INFO - Fetching URL info for: https://www.cri
+2025-06-05 12:45:42,038 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cricbuzz.co', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFE16810>: Failed to resolve 'www.cricbuzz.co' ([Errno 11002] getaddrinfo failed)"))
+2025-06-05 12:45:42,042 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cric', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFDDFA50>: Failed to resolve 'www.cric' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:42,048 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cri', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFC69710>: Failed to resolve 'www.cri' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:42,124 - phishshield - INFO - Fetching URL info for: https://www.cr
+2025-06-05 12:45:42,128 - phishshield - INFO - Fetching URL info for: https://www.c
+2025-06-05 12:45:42,271 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.c', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1F00AA750>: Failed to resolve 'www.c' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:42,291 - phishshield - INFO - Fetching URL info for: https://www.
+2025-06-05 12:45:42,312 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.cr', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1F00ABE90>: Failed to resolve 'www.cr' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:42,359 - phishshield - INFO - Fetching URL info for: https://www
+2025-06-05 12:45:42,363 - phishshield - INFO - Fetching URL info for: https://ww
+2025-06-05 12:45:42,375 - phishshield - INFO - Fetching URL info for: https://w
+2025-06-05 12:45:42,609 - phishshield - INFO - Fetching URL info for: https://
+2025-06-05 12:45:42,611 - phishshield - ERROR - Request failed: Invalid URL 'https://': No host supplied
+2025-06-05 12:45:45,019 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www.', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1F00AB210>: Failed to resolve 'www' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:45,051 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='www', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFFBD8D0>: Failed to resolve 'www' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:45,076 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='w', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFFBED50>: Failed to resolve 'w' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:45:45,076 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='ww', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFDDD950>: Failed to resolve 'ww' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:46:18,293 - phishshield - INFO - Fetching URL info for: https://google
+2025-06-05 12:46:20,993 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='google', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFED2F10>: Failed to resolve 'google' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:46:23,177 - phishshield - INFO - Fetching URL info for: https://google.
+2025-06-05 12:46:24,528 - phishshield - INFO - Fetching URL info for: https://google.com
+2025-06-05 12:46:25,596 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='google.', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1F0004090>: Failed to resolve 'google' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:46:27,750 - phishshield - INFO - Prediction complete for https://google.com: legitimate
+2025-06-05 12:46:33,983 - phishshield - INFO - Fetching URL info for: https://google
+2025-06-05 12:46:34,357 - phishshield - INFO - Fetching URL info for: https://googl
+2025-06-05 12:46:36,693 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='google', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFFBFD50>: Failed to resolve 'google' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:46:36,701 - phishshield - INFO - Fetching URL info for: https://google
+2025-06-05 12:46:37,068 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='googl', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFC6AA90>: Failed to resolve 'googl' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:46:39,008 - phishshield - INFO - Fetching URL info for: https://google.com
+2025-06-05 12:46:39,400 - phishshield - ERROR - Request failed: HTTPSConnectionPool(host='google', port=443): Max retries exceeded with url: / (Caused by NameResolutionError("<urllib3.connection.HTTPSConnection object at 0x000001E1EFAF4390>: Failed to resolve 'google' ([Errno 11001] getaddrinfo failed)"))
+2025-06-05 12:56:10,791 - phishshield - INFO - Fetching URL info for: https://google.com
+2025-06-05 12:56:12,919 - phishshield - INFO - Prediction complete for https://google.com: legitimate
+2025-06-05 13:06:19,212 - phishshield - INFO - Fetching URL info for: https://allegro.pl-oferta33281.cyou
+2025-06-05 13:06:21,070 - phishshield - INFO - Prediction complete for https://allegro.pl-oferta33281.cyou: phishing
+2025-06-05 13:06:21,274 - phishshield - WARNING - Empty response received
+2025-06-05 13:15:46,048 - phishshield - INFO - Fetching URL info for: https://paypal-about.fr/help
+2025-06-05 13:15:47,375 - phishshield - INFO - Prediction complete for https://paypal-about.fr/help: phishing
+2025-06-05 13:15:48,691 - phishshield - WARNING - Empty response received
+2025-06-05 13:16:02,164 - phishshield - INFO - Fetching URL info for: https://paypal-about.fr/help
+2025-06-05 13:16:03,766 - phishshield - INFO - Prediction complete for https://paypal-about.fr/help: phishing
+2025-06-05 13:16:04,356 - phishshield - WARNING - Empty response received
+2025-06-05 13:19:42,442 - phishshield - INFO - Prediction complete for https://paypal-about.fr/help: phishing
+2025-06-05 13:21:57,969 - phishshield - INFO - Prediction complete for https://paypal-about.fr/help: phishing
+2025-06-05 13:23:02,798 - phishshield - INFO - Fetching URL info for: https://cricbuzz.com
+2025-06-05 13:23:04,291 - phishshield - INFO - Prediction complete for https://cricbuzz.com: legitimate

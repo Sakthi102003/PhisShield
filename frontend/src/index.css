@@ -1,0 +1,146 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 240 100% 3%;
+    --foreground: 0 0% 100%;
+    --card: 240 100% 3%;
+    --card-foreground: 0 0% 100%;
+    --popover: 240 100% 3%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 100% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 100% 3%;
+    --muted-foreground: 0 0% 80%;
+    --accent: 180 100% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 100% 50%;
+    --input: 210 100% 50%;
+    --ring: 210 100% 50%;
+    --radius: 0.5rem;
+  }
+
+  [data-theme="dark"] {
+    --background: 240 100% 3%;
+    --foreground: 0 0% 100%;
+    --card: 240 100% 3%;
+    --card-foreground: 0 0% 100%;
+    --popover: 240 100% 3%;
+    --popover-foreground: 0 0% 100%;
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 100% 40%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 240 100% 3%;
+    --muted-foreground: 0 0% 80%;
+    --accent: 180 100% 40%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 210 100% 50%;
+    --input: 210 100% 50%;
+    --ring: 210 100% 50%;
+  }
+}
+
+@layer base {
+  * {
+    border-color: hsl(var(--border));
+  }
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+  }
+  
+  [data-theme="dark"] body {
+    background-image: 
+      linear-gradient(rgba(0, 0, 0, 0.95), rgba(0, 0, 0, 0.95)),
+      repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 2px,
+        rgba(0, 120, 255, 0.05) 2px,
+        rgba(0, 120, 255, 0.05) 4px
+      );
+  }
+}
+
+/* Modern tech styles */
+.cyberpunk-text {
+  letter-spacing: 0.05em;
+  color: hsl(var(--foreground));
+}
+
+[data-theme="dark"] .cyberpunk-text {
+  text-shadow: 0 0 8px rgba(0, 120, 255, 0.3);
+}
+
+.cyberpunk-border {
+  border: 1px solid hsl(var(--border));
+}
+
+[data-theme="dark"] .cyberpunk-border {
+  box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
+}
+
+.cyberpunk-button {
+  background: hsl(var(--primary));
+  border: none;
+  color: hsl(var(--primary-foreground));
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+[data-theme="dark"] .cyberpunk-button {
+  background: linear-gradient(45deg, #0078ff, #00b4d8);
+}
+
+.cyberpunk-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+
+[data-theme="dark"] .cyberpunk-button:hover {
+  box-shadow: 0 0 15px rgba(0, 120, 255, 0.4);
+}
+
+.cyberpunk-card {
+  background: hsl(var(--card));
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--card-foreground));
+}
+
+[data-theme="dark"] .cyberpunk-card {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #0078ff;
+  box-shadow: 0 0 12px rgba(0, 120, 255, 0.15);
+}
+
+.cyberpunk-input {
+  background: hsl(var(--background));
+  border: 1px solid hsl(var(--input));
+  color: hsl(var(--foreground));
+}
+
+[data-theme="dark"] .cyberpunk-input {
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid #0078ff;
+  box-shadow: 0 0 8px rgba(0, 120, 255, 0.1);
+}
+
+.cyberpunk-input:focus {
+  outline: none;
+  border-color: hsl(var(--ring));
+}
+
+[data-theme="dark"] .cyberpunk-input:focus {
+  box-shadow: 0 0 12px rgba(0, 120, 255, 0.2);
+} 
