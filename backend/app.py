@@ -158,14 +158,17 @@ def login():
 @token_required
 def get_history(current_user):
     try:
-        checks = URLCheck.query.filter_by(user_id=current_user.id).order_by(URLCheck.checked_at.desc()).all()
-        history = [{
+        # Get user's URL check history, ordered by most recent first
+        history = URLCheck.query.filter_by(user_id=current_user.id)\
+            .order_by(URLCheck.checked_at.desc()).all()
+        
+        return jsonify([{
             'url': check.url,
             'is_phishing': check.is_phishing,
             'confidence': check.confidence,
+            'features': check.features,
             'checked_at': check.checked_at.isoformat()
-        } for check in checks]
-        return jsonify(history)
+        } for check in history]), 200
     except Exception as e:
         log_error(e, "Failed to fetch history")
         return jsonify({'error': 'Failed to fetch history'}), 500

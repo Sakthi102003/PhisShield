@@ -22,13 +22,17 @@ const History = () => {
 
       const response = await axios.get(`${config.apiUrl}/api/history`, {
         headers: {
-          'Authorization': `Bearer ${token}`
-        }
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        withCredentials: true
       });
 
       setHistory(response.data);
       setLoading(false);
     } catch (err) {
+      console.error('History fetch error:', err);
+      console.error('Response:', err.response);
       setError(err.response?.data?.error || 'Failed to fetch history');
       setLoading(false);
     }
