@@ -1,6 +1,5 @@
-import axios from 'axios';
 import { useState } from 'react';
-import { config } from '../config';
+import api from '../services/api';
 
 const Auth = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -17,16 +16,7 @@ const Auth = ({ onLogin }) => {
 
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-      const response = await axios({
-        method: 'post',
-        url: `${config.apiUrl}${endpoint}`,
-        data: formData,
-        headers: {
-          'Content-Type': 'application/json',
-          'Accept': 'application/json'
-        },
-        withCredentials: true
-      });
+      const response = await api.post(endpoint, formData);
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);

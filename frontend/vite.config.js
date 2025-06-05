@@ -12,6 +12,21 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     target: 'esnext',
-    minify: 'esbuild'
+    minify: 'esbuild',
+    chunkSizeWarningLimit: 1000,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          'vendor-react': ['react', 'react-dom'],
+          'vendor-utils': ['axios', 'jspdf'],
+          'components': [
+            './src/components/Auth.jsx',
+            './src/components/History.jsx',
+            './src/components/ThemeToggle.jsx',
+            './src/components/ErrorBoundary.jsx'
+          ]
+        }
+      }
+    }
   }
 })

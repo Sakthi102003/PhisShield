@@ -1,10 +1,19 @@
 import axios from 'axios'
 import jsPDF from 'jspdf'
 import { AlertTriangle, CheckCircle2, Download, Globe, LogOut, Shield } from 'lucide-react'
-import { useCallback, useEffect, useState } from 'react'
-import Auth from './components/Auth'
-import History from './components/History'
+import { Suspense, lazy, useCallback, useEffect, useState } from 'react'
 import { config } from './config'
+
+// Lazy load components
+const Auth = lazy(() => import('./components/Auth'))
+const History = lazy(() => import('./components/History'))
+
+// Loading component
+const Loading = () => (
+  <div className="flex items-center justify-center p-4">
+    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+  </div>
+)
 
 function App() {
   const [url, setUrl] = useState('')
@@ -243,242 +252,238 @@ function App() {
 
   return (
     <div className="min-h-screen bg-background text-foreground">
-      {!user ? (
-        <Auth onLogin={handleLogin} />
-      ) : (
-        <div className="container mx-auto px-4 py-8">
-          <div className="flex justify-between items-center mb-8">
-            <h1 
-              onClick={() => {
-                setUrl('');
-                setResult(null);
-                setError(null);
-                setUrlInfo(null);
-                setShowHistory(false);
-              }} 
-              className="text-3xl font-bold cyberpunk-text cursor-pointer hover:text-accent transition-colors"
-            >
-              PhishShield
-            </h1>
-            <div className="flex gap-4">
-              <button
-                onClick={() => setShowHistory(!showHistory)}
-                className="cyberpunk-button px-4 py-2 rounded"
-              >
-                {showHistory ? 'Back to Scanner' : 'View History'}
-              </button>
-              <button
-                onClick={handleLogout}
-                className="cyberpunk-button px-4 py-2 rounded flex items-center gap-2"
-              >
-                <LogOut size={18} /> Logout
-              </button>
-            </div>
-          </div>
-
-          {showHistory ? (
-            <History token={user.token} />
-          ) : (
-            <div className="cyberpunk-card rounded-lg p-6 max-w-2xl mx-auto">
-              <div className="space-y-4">
-                <div className="flex gap-4">
-                  <div className="flex-1 relative">
-                    <input
-                      type="text"
-                      value={url}
-                      onChange={handleUrlChange}
-                      placeholder="Enter website (e.g., example.com)"
-                      className={`cyberpunk-input w-full px-4 py-2 rounded ${
-                        url && !formatAndValidateUrl(url) ? 'border-destructive' : ''
-                      }`}
-                    />
-                    {url && !formatAndValidateUrl(url) && (
-                      <div className="absolute text-xs text-destructive mt-1">
-                        Please enter a valid website address
-                      </div>
-                    )}
-                  </div>
-                  <button
-                    onClick={handleCheck}
-                    disabled={loading || !url || !formatAndValidateUrl(url)}
-                    className="cyberpunk-button px-6 py-2 rounded disabled:opacity-50"
-                  >
-                    {loading ? 'Analyzing...' : 'Check URL'}
-                  </button>
-                </div>
-
-                {loadingInfo && (
-                  <div className="text-accent text-sm flex items-center gap-2 mt-2">
-                    <Globe className="animate-spin" size={16} />
-                    Fetching website information...
-                  </div>
-                )}
-
-                {urlInfo && (
-                  <div className="cyberpunk-border bg-black/20 p-3 rounded space-y-2">
-                    <div className="flex items-center gap-2 text-accent">
-                      <Globe size={16} />
-                      <span className="font-semibold">URL Information</span>
-                    </div>
-                    <div className="grid gap-2">
-                      {urlInfo.error ? (
-                        <div className="text-sm text-destructive">
-                          {urlInfo.error}
-                        </div>
-                      ) : null}
-                      
-                      {/* Always show domain */}
-                      <div className="text-sm flex items-center gap-2">
-                        <span className="text-muted-foreground min-w-[80px]">Domain:</span>
-                        <span className="text-foreground font-mono">{urlInfo.domain || 'Unknown'}</span>
-                      </div>
-
-                      {/* Show status if available */}
-                      {urlInfo.status && (
-                        <div className="text-sm flex items-center gap-2">
-                          <span className="text-muted-foreground min-w-[80px]">Status:</span>
-                          <span className={`font-mono ${
-                            urlInfo.status >= 200 && urlInfo.status < 300 
-                              ? 'text-[#34c759]' 
-                              : 'text-destructive'
-                          }`}>
-                            {urlInfo.status}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Title with proper wrapping */}
-                      <div className="text-sm flex gap-2">
-                        <span className="text-muted-foreground min-w-[80px]">Title:</span>
-                        <span className="text-foreground break-words">
-                          {urlInfo.title || 'No title available'}
-                        </span>
-                      </div>
-
-                      {/* Description with proper wrapping */}
-                      {urlInfo.description && (
-                        <div className="text-sm flex gap-2">
-                          <span className="text-muted-foreground min-w-[80px]">Description:</span>
-                          <span className="text-foreground break-words">
-                            {urlInfo.description}
-                          </span>
-                        </div>
-                      )}
-
-                      {/* Content type */}
-                      <div className="text-sm flex items-center gap-2">
-                        <span className="text-muted-foreground min-w-[80px]">Type:</span>
-                        <span className="text-foreground font-mono">
-                          {urlInfo.type || 'Unknown'}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                )}
-
-                {error && (
-                  <div className="bg-destructive/10 text-destructive p-4 rounded flex items-center gap-2">
-                    <AlertTriangle size={18} />
-                    {error}
-                  </div>
-                )}
-
-                {result && (
-                  <div className="space-y-4">
-                    <div className={`p-4 rounded flex items-center gap-2 ${
-                      result.is_phishing 
-                        ? 'bg-destructive/10 text-destructive' 
-                        : 'bg-[#34c759]/10 text-[#34c759]'
-                    }`}>
-                      {result.is_phishing ? (
-                        <AlertTriangle size={18} />
-                      ) : (
-                        <CheckCircle2 size={18} />
-                      )}
-                      <span className="font-semibold">
-                        {result.is_phishing
-                          ? 'Potential Phishing Site Detected'
-                          : 'Legitimate Website'}
-                      </span>
-                      <span className="ml-auto">
-                        Confidence: {(result.confidence * 100).toFixed(1)}%
-                      </span>
-                    </div>
-
-                    <div className="space-y-2">
-                      <h3 className="text-lg font-semibold cyberpunk-text">URL Analysis Details</h3>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        {Object.entries(result.features).map(([key, value]) => (
-                          <div key={key} className="cyberpunk-border bg-black/20 p-3 rounded">
-                            <div className="text-sm text-secondary-foreground">
-                              {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                            </div>
-                            <div className="mt-1 font-mono text-accent">
-                              {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    <button
-                      onClick={generatePDF}
-                      className="cyberpunk-button px-4 py-2 rounded flex items-center gap-2 w-full justify-center"
-                    >
-                      <Download size={18} />
-                      Download Report
-                    </button>
-                  </div>
-                )}
-
-                {showHistory && (
-                  <div className="mt-4 flex justify-end">
-                    <button
-                      onClick={exportHistory}
-                      className="cyberpunk-button px-4 py-2 rounded flex items-center gap-2"
-                    >
-                      <Download size={18} />
-                      Export History
-                    </button>
-                  </div>
-                )}
-
-                {urlInfo && !urlInfo.error && (
-                  <div className="mt-4 cyberpunk-border bg-black/20 p-3 rounded">
-                    <div className="flex items-center gap-2 text-accent mb-2">
-                      <Shield size={16} />
-                      <span className="font-semibold">Security Information</span>
-                    </div>
-                    <div className="grid gap-2">
-                      <div className="text-sm flex items-center gap-2">
-                        <span className="text-muted-foreground min-w-[100px]">HTTPS:</span>
-                        <span className={`font-mono ${
-                          url.startsWith('https://') ? 'text-[#34c759]' : 'text-destructive'
-                        }`}>
-                          {url.startsWith('https://') ? 'Secure' : 'Not Secure'}
-                        </span>
-                      </div>
-                      {urlInfo.status && (
-                        <div className="text-sm flex items-center gap-2">
-                          <span className="text-muted-foreground min-w-[100px]">Connection:</span>
-                          <span className={`font-mono ${
-                            urlInfo.status >= 200 && urlInfo.status < 400 
-                              ? 'text-[#34c759]' 
-                              : 'text-destructive'
-                          }`}>
-                            {urlInfo.status >= 200 && urlInfo.status < 400 ? 'Successful' : 'Failed'}
-                            {' '}(Status: {urlInfo.status})
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                )}
+      <div className="container mx-auto px-4 py-8">
+        {!user ? (
+          <Suspense fallback={<Loading />}>
+            <Auth onLogin={handleLogin} />
+          </Suspense>
+        ) : (
+          <div>
+            <div className="flex justify-between items-center mb-8">
+              <h1 className="text-4xl font-bold cyberpunk-text">PhishShield</h1>
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => setShowHistory(!showHistory)}
+                  className="cyberpunk-button px-4 py-2 rounded"
+                >
+                  {showHistory ? 'Check URL' : 'View History'}
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="cyberpunk-button-secondary px-4 py-2 rounded flex items-center gap-2"
+                >
+                  <LogOut size={18} />
+                  Logout
+                </button>
               </div>
             </div>
-          )}
-        </div>
-      )}
+
+            {showHistory ? (
+              <Suspense fallback={<Loading />}>
+                <History user={user} />
+              </Suspense>
+            ) : (
+              <div className="cyberpunk-card rounded-lg p-6 max-w-2xl mx-auto">
+                <div className="space-y-4">
+                  <div className="flex gap-4">
+                    <div className="flex-1 relative">
+                      <input
+                        type="text"
+                        value={url}
+                        onChange={handleUrlChange}
+                        placeholder="Enter website (e.g., example.com)"
+                        className={`cyberpunk-input w-full px-4 py-2 rounded ${
+                          url && !formatAndValidateUrl(url) ? 'border-destructive' : ''
+                        }`}
+                      />
+                      {url && !formatAndValidateUrl(url) && (
+                        <div className="absolute text-xs text-destructive mt-1">
+                          Please enter a valid website address
+                        </div>
+                      )}
+                    </div>
+                    <button
+                      onClick={handleCheck}
+                      disabled={loading || !url || !formatAndValidateUrl(url)}
+                      className="cyberpunk-button px-6 py-2 rounded disabled:opacity-50"
+                    >
+                      {loading ? 'Analyzing...' : 'Check URL'}
+                    </button>
+                  </div>
+
+                  {loadingInfo && (
+                    <div className="text-accent text-sm flex items-center gap-2 mt-2">
+                      <Globe className="animate-spin" size={16} />
+                      Fetching website information...
+                    </div>
+                  )}
+
+                  {urlInfo && (
+                    <div className="cyberpunk-border bg-black/20 p-3 rounded space-y-2">
+                      <div className="flex items-center gap-2 text-accent">
+                        <Globe size={16} />
+                        <span className="font-semibold">URL Information</span>
+                      </div>
+                      <div className="grid gap-2">
+                        {urlInfo.error ? (
+                          <div className="text-sm text-destructive">
+                            {urlInfo.error}
+                          </div>
+                        ) : null}
+                        
+                        {/* Always show domain */}
+                        <div className="text-sm flex items-center gap-2">
+                          <span className="text-muted-foreground min-w-[80px]">Domain:</span>
+                          <span className="text-foreground font-mono">{urlInfo.domain || 'Unknown'}</span>
+                        </div>
+
+                        {/* Show status if available */}
+                        {urlInfo.status && (
+                          <div className="text-sm flex items-center gap-2">
+                            <span className="text-muted-foreground min-w-[80px]">Status:</span>
+                            <span className={`font-mono ${
+                              urlInfo.status >= 200 && urlInfo.status < 300 
+                                ? 'text-[#34c759]' 
+                                : 'text-destructive'
+                            }`}>
+                              {urlInfo.status}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Title with proper wrapping */}
+                        <div className="text-sm flex gap-2">
+                          <span className="text-muted-foreground min-w-[80px]">Title:</span>
+                          <span className="text-foreground break-words">
+                            {urlInfo.title || 'No title available'}
+                          </span>
+                        </div>
+
+                        {/* Description with proper wrapping */}
+                        {urlInfo.description && (
+                          <div className="text-sm flex gap-2">
+                            <span className="text-muted-foreground min-w-[80px]">Description:</span>
+                            <span className="text-foreground break-words">
+                              {urlInfo.description}
+                            </span>
+                          </div>
+                        )}
+
+                        {/* Content type */}
+                        <div className="text-sm flex items-center gap-2">
+                          <span className="text-muted-foreground min-w-[80px]">Type:</span>
+                          <span className="text-foreground font-mono">
+                            {urlInfo.type || 'Unknown'}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {error && (
+                    <div className="bg-destructive/10 text-destructive p-4 rounded flex items-center gap-2">
+                      <AlertTriangle size={18} />
+                      {error}
+                    </div>
+                  )}
+
+                  {result && (
+                    <div className="space-y-4">
+                      <div className={`p-4 rounded flex items-center gap-2 ${
+                        result.is_phishing 
+                          ? 'bg-destructive/10 text-destructive' 
+                          : 'bg-[#34c759]/10 text-[#34c759]'
+                      }`}>
+                        {result.is_phishing ? (
+                          <AlertTriangle size={18} />
+                        ) : (
+                          <CheckCircle2 size={18} />
+                        )}
+                        <span className="font-semibold">
+                          {result.is_phishing
+                            ? 'Potential Phishing Site Detected'
+                            : 'Legitimate Website'}
+                        </span>
+                        <span className="ml-auto">
+                          Confidence: {(result.confidence * 100).toFixed(1)}%
+                        </span>
+                      </div>
+
+                      <div className="space-y-2">
+                        <h3 className="text-lg font-semibold cyberpunk-text">URL Analysis Details</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {Object.entries(result.features).map(([key, value]) => (
+                            <div key={key} className="cyberpunk-border bg-black/20 p-3 rounded">
+                              <div className="text-sm text-secondary-foreground">
+                                {key.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                              </div>
+                              <div className="mt-1 font-mono text-accent">
+                                {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button
+                        onClick={generatePDF}
+                        className="cyberpunk-button px-4 py-2 rounded flex items-center gap-2 w-full justify-center"
+                      >
+                        <Download size={18} />
+                        Download Report
+                      </button>
+                    </div>
+                  )}
+
+                  {showHistory && (
+                    <div className="mt-4 flex justify-end">
+                      <button
+                        onClick={exportHistory}
+                        className="cyberpunk-button px-4 py-2 rounded flex items-center gap-2"
+                      >
+                        <Download size={18} />
+                        Export History
+                      </button>
+                    </div>
+                  )}
+
+                  {urlInfo && !urlInfo.error && (
+                    <div className="mt-4 cyberpunk-border bg-black/20 p-3 rounded">
+                      <div className="flex items-center gap-2 text-accent mb-2">
+                        <Shield size={16} />
+                        <span className="font-semibold">Security Information</span>
+                      </div>
+                      <div className="grid gap-2">
+                        <div className="text-sm flex items-center gap-2">
+                          <span className="text-muted-foreground min-w-[100px]">HTTPS:</span>
+                          <span className={`font-mono ${
+                            url.startsWith('https://') ? 'text-[#34c759]' : 'text-destructive'
+                          }`}>
+                            {url.startsWith('https://') ? 'Secure' : 'Not Secure'}
+                          </span>
+                        </div>
+                        {urlInfo.status && (
+                          <div className="text-sm flex items-center gap-2">
+                            <span className="text-muted-foreground min-w-[100px]">Connection:</span>
+                            <span className={`font-mono ${
+                              urlInfo.status >= 200 && urlInfo.status < 400 
+                                ? 'text-[#34c759]' 
+                                : 'text-destructive'
+                            }`}>
+                              {urlInfo.status >= 200 && urlInfo.status < 400 ? 'Successful' : 'Failed'}
+                              {' '}(Status: {urlInfo.status})
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
