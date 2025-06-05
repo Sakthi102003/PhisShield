@@ -23,9 +23,9 @@ const History = () => {
       const response = await axios.get(`${config.apiUrl}/api/history`, {
         headers: {
           'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true
+          'Content-Type': 'application/json',
+          'Access-Control-Allow-Origin': '*'
+        }
       });
 
       setHistory(response.data);
