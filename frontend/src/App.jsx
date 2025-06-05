@@ -1,10 +1,10 @@
 import axios from 'axios'
 import jsPDF from 'jspdf'
 import { AlertTriangle, CheckCircle2, Download, Globe, LogOut, Shield } from 'lucide-react'
-import config from './config'
 import { useCallback, useEffect, useState } from 'react'
 import Auth from './components/Auth'
 import History from './components/History'
+import { config } from './config'
 
 function App() {
   const [url, setUrl] = useState('')

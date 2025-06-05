@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import config from '../config';
+import { config } from '../config';
 
 const History = () => {
   const [history, setHistory] = useState([]);
