@@ -1,9 +1,8 @@
-import axios from 'axios';
 import { AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import { config } from '../config';
+import api from '../services/api';
 
-const History = () => {
+const History = ({ user }) => {
   const [history, setHistory] = useState([]);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(true);
@@ -14,26 +13,18 @@ const History = () => {
 
   const fetchHistory = async () => {
     try {
-      const token = localStorage.getItem('token');
-      if (!token) {
+      if (!user?.token) {
         setError('Please login to view history');
+        setLoading(false);
         return;
       }
 
-      const response = await axios.get(`${config.apiUrl}/api/history`, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-          'Access-Control-Allow-Origin': '*'
-        }
-      });
-
+      const response = await api.get('/api/history');
       setHistory(response.data);
-      setLoading(false);
     } catch (err) {
       console.error('History fetch error:', err);
-      console.error('Response:', err.response);
       setError(err.response?.data?.error || 'Failed to fetch history');
+    } finally {
       setLoading(false);
     }
   };

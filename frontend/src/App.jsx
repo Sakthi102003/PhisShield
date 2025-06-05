@@ -205,11 +205,7 @@ function App() {
 
   const exportHistory = async () => {
     try {
-      const response = await axios.get(`${config.apiUrl}/api/history`, {
-        headers: {
-          'Authorization': `Bearer ${user.token}`
-        }
-      });
+      const response = await api.get('/api/history');
       
       const rows = [
         ['PhishShield History Export'],
@@ -238,6 +234,7 @@ function App() {
       a.click();
       document.body.removeChild(a);
     } catch (err) {
+      console.error('Export history error:', err);
       setError('Failed to export history');
     }
   };
