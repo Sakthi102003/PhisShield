@@ -1,5 +1,6 @@
 import axios from 'axios';
 import { useState } from 'react';
+import config from '../config';
 
 const Auth = ({ onLogin }) => {
   const [isLogin, setIsLogin] = useState(true);
@@ -16,7 +17,7 @@ const Auth = ({ onLogin }) => {
 
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-      const response = await axios.post(`http://localhost:5000${endpoint}`, formData);
+      const response = await axios.post(`${config.apiUrl}${endpoint}`, formData);
       
       if (response.data.token) {
         localStorage.setItem('token', response.data.token);

@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { AlertTriangle, CheckCircle2, Clock } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import config from '../config';
 
 const History = () => {
   const [history, setHistory] = useState([]);
@@ -19,7 +20,7 @@ const History = () => {
         return;
       }
 
-      const response = await axios.get('http://localhost:5000/api/history', {
+      const response = await axios.get(`${config.apiUrl}/api/history`, {
         headers: {
           'Authorization': `Bearer ${token}`
         }

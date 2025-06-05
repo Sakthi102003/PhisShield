@@ -1,6 +1,7 @@
 import axios from 'axios'
 import jsPDF from 'jspdf'
 import { AlertTriangle, CheckCircle2, Download, Globe, LogOut, Shield } from 'lucide-react'
+import config from './config'
 import { useCallback, useEffect, useState } from 'react'
 import Auth from './components/Auth'
 import History from './components/History'
@@ -76,7 +77,7 @@ function App() {
       setUrlInfo(null);
       
       try {
-        const response = await axios.get(`http://localhost:5000/api/url-info`, {
+        const response = await axios.get(`${config.apiUrl}/api/url-info`, {
           params: { url: formattedUrl },
           headers: {
             'Authorization': `Bearer ${token}`
@@ -123,7 +124,7 @@ function App() {
     setResult(null)
 
     try {
-      const response = await axios.post('http://localhost:5000/api/predict', 
+      const response = await axios.post(`${config.apiUrl}/api/predict`, 
         { url: formattedUrl },
         {
           headers: {
@@ -203,7 +204,7 @@ function App() {
 
   const exportHistory = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/history', {
+      const response = await axios.get(`${config.apiUrl}/api/history`, {
         headers: {
           'Authorization': `Bearer ${user.token}`
         }
