@@ -22,39 +22,13 @@ from backend.utils.url_features import (ESSENTIAL_FEATURES,
 
 app = Flask(__name__)
 
-# CORS Configuration
-CORS(app, resources={
-    r"/*": {
-        "origins": ["https://phisshield.onrender.com", "http://localhost:5173"],
-        "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
-        "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True,
-        "expose_headers": ["Content-Type", "Authorization"]
-    }
-})
-
-# Remove any duplicate CORS handlers
-app.before_request_funcs = {}
-app.after_request_funcs = {}
-
-@app.before_request
-def handle_preflight():
-    if request.method == "OPTIONS":
-        response = make_response()
-        response.headers.add('Access-Control-Allow-Origin', '*')
-        response.headers.add('Access-Control-Allow-Headers', '*')
-        response.headers.add('Access-Control-Allow-Methods', '*')
-        return response
-
-@app.after_request
-def after_request(response):
-    origin = request.headers.get('Origin')
-    if origin:
-        response.headers.add('Access-Control-Allow-Origin', origin)
-    response.headers.add('Access-Control-Allow-Headers', 'Content-Type,Authorization')
-    response.headers.add('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE,OPTIONS')
-    response.headers.add('Access-Control-Allow-Credentials', 'true')
-    return response
+# CORS Configuration - configure only once
+app.config['CORS_HEADERS'] = 'Content-Type'
+CORS(app, 
+     origins=['https://phisshield.onrender.com', 'http://localhost:5173'],
+     supports_credentials=True,
+     allow_headers=['Content-Type', 'Authorization'],
+     methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
 
 # Configuration
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')  # Change in production
