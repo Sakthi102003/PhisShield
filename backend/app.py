@@ -23,14 +23,19 @@ from backend.utils.url_features import (ESSENTIAL_FEATURES,
 app = Flask(__name__)
 
 # CORS Configuration
-cors = CORS(app, resources={
+CORS(app, resources={
     r"/*": {
         "origins": ["https://phisshield.onrender.com", "http://localhost:5173"],
         "methods": ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
         "allow_headers": ["Content-Type", "Authorization"],
-        "supports_credentials": True
+        "supports_credentials": True,
+        "expose_headers": ["Content-Type", "Authorization"]
     }
 })
+
+# Remove any duplicate CORS handlers
+app.before_request_funcs = {}
+app.after_request_funcs = {}
 
 @app.before_request
 def handle_preflight():
