@@ -151,3 +151,13 @@
 2025-06-05 13:21:57,969 - phishshield - INFO - Prediction complete for https://paypal-about.fr/help: phishing
 2025-06-05 13:23:02,798 - phishshield - INFO - Fetching URL info for: https://cricbuzz.com
 2025-06-05 13:23:04,291 - phishshield - INFO - Prediction complete for https://cricbuzz.com: legitimate
+2025-06-05 17:57:54,985 - phishshield - INFO - Loading model from: D:\Phishing Website Detector\model
+2025-06-05 17:58:04,118 - phishshield - INFO - Model loaded successfully
+2025-06-05 17:58:05,556 - phishshield - INFO - Loading model from: D:\Phishing Website Detector\model
+2025-06-05 17:58:07,250 - phishshield - INFO - Model loaded successfully
+2025-06-05 17:58:25,879 - phishshield - INFO - Loading model from: D:\Phishing Website Detector\model
+2025-06-05 17:58:30,483 - phishshield - INFO - Model loaded successfully
+2025-06-05 17:58:39,515 - phishshield - INFO - Loading model from: D:\Phishing Website Detector\model
+2025-06-05 17:58:41,119 - phishshield - INFO - Model loaded successfully
+2025-06-05 17:58:45,150 - phishshield - INFO - Fetching URL info for: https://youtube.com/watch?v=EM2YhaeDO1c
+2025-06-05 17:58:46,404 - phishshield - INFO - Prediction complete for https://youtube.com/watch?v=EM2YhaeDO1c: legitimate
