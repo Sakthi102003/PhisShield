@@ -1,8 +1,6 @@
-import axios from 'axios'
 import jsPDF from 'jspdf'
 import { AlertTriangle, CheckCircle2, Download, Globe, LogOut, Shield } from 'lucide-react'
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react'
-import { config } from './config'
 import api from './services/api'
 
 // Lazy load components
@@ -35,6 +33,15 @@ function App() {
     }
   }, [])
 
+  // Cleanup debounced function on unmount
+  useEffect(() => {
+    return () => {
+      if (debouncedFetchUrlInfo?.cancel) {
+        debouncedFetchUrlInfo.cancel();
+      }
+    };
+  }, [debouncedFetchUrlInfo])
+
   const handleLogin = (userData) => {
     setUser(userData)
   }
@@ -49,10 +56,12 @@ function App() {
   // Debounce function to limit API calls
   const debounce = (func, wait) => {
     let timeout;
-    return (...args) => {
+    const debouncedFn = (...args) => {
       clearTimeout(timeout);
       timeout = setTimeout(() => func(...args), wait);
     };
+    debouncedFn.cancel = () => clearTimeout(timeout);
+    return debouncedFn;
   };
 
   // URL validation and formatting function
@@ -92,15 +101,32 @@ function App() {
         });
         setUrlInfo(response.data);
       } catch (err) {
-        console.error('Error fetching URL info:', err);
-        // Set minimal URL info with error
-        setUrlInfo({
-          domain: new URL(formattedUrl).hostname,
-          error: 'Could not fetch website information',
-          title: null,
-          description: null,
-          type: null
-        });
+        // Don't log errors for aborted requests
+        if (err.name !== 'AbortError' && err.code !== 'ERR_CANCELED') {
+          console.error('Error fetching URL info:', err);
+        }
+        
+        // Only set error info if the request wasn't cancelled
+        if (err.code !== 'ERR_CANCELED') {
+          try {
+            setUrlInfo({
+              domain: new URL(formattedUrl).hostname,
+              error: 'Could not fetch website information',
+              title: null,
+              description: null,
+              type: null
+            });
+          } catch (urlErr) {
+            // Handle case where URL parsing fails
+            setUrlInfo({
+              domain: 'Unknown',
+              error: 'Could not fetch website information',
+              title: null,
+              description: null,
+              type: null
+            });
+          }
+        }
       } finally {
         setLoadingInfo(false);
       }

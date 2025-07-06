@@ -20,4 +20,16 @@ api.interceptors.request.use((config) => {
   return Promise.reject(error);
 });
 
+// Add response interceptor to handle errors gracefully
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    // Handle network errors or other issues
+    if (!error.response) {
+      console.error('Network error or request was aborted:', error.message);
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default api;
