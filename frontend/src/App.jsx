@@ -33,14 +33,7 @@ function App() {
     }
   }, [])
 
-  // Cleanup debounced function on unmount
-  useEffect(() => {
-    return () => {
-      if (debouncedFetchUrlInfo?.cancel) {
-        debouncedFetchUrlInfo.cancel();
-      }
-    };
-  }, [debouncedFetchUrlInfo])
+
 
   const handleLogin = (userData) => {
     setUser(userData)
@@ -133,6 +126,15 @@ function App() {
     }, 500),
     []
   );
+
+  // Cleanup debounced function on unmount
+  useEffect(() => {
+    return () => {
+      if (debouncedFetchUrlInfo?.cancel) {
+        debouncedFetchUrlInfo.cancel();
+      }
+    };
+  }, [debouncedFetchUrlInfo]);
 
   const handleUrlChange = (e) => {
     const newUrl = e.target.value;
