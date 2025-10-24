@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Dict, Union
+from typing import Dict, Optional, Union
 
 from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
@@ -13,13 +13,23 @@ class User(db.Model, UserMixin):
     username = db.Column(db.String(80), unique=True, nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password_hash = db.Column(db.String(128))
+    display_name = db.Column(db.String(120), nullable=True)
+    photo_url = db.Column(db.String(512), nullable=True)
+    auth_provider = db.Column(db.String(20), default='local')  # 'local' or 'google'
+    google_uid = db.Column(db.String(128), nullable=True)  # Unique constraint enforced at app level
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
     url_checks = db.relationship('URLCheck', backref='user', lazy=True)
 
-    def __init__(self, username: str, email: str, password_hash: str) -> None:
+    def __init__(self, username: str, email: str, password_hash: str, 
+                 display_name: Optional[str] = None, photo_url: Optional[str] = None, 
+                 auth_provider: str = 'local', google_uid: Optional[str] = None) -> None:
         self.username = username
         self.email = email
         self.password_hash = password_hash
+        self.display_name = display_name
+        self.photo_url = photo_url
+        self.auth_provider = auth_provider
+        self.google_uid = google_uid
 
 class URLCheck(db.Model):
     __tablename__ = 'url_checks'

@@ -1,11 +1,18 @@
 import jsPDF from 'jspdf'
-import { AlertTriangle, CheckCircle2, Download, Globe, LogOut, Shield } from 'lucide-react'
+import { AlertTriangle, BarChart3, CheckCircle2, Download, Globe, History as HistoryIcon, LogOut, Search, Shield, Upload, User } from 'lucide-react'
 import { Suspense, lazy, useCallback, useEffect, useState } from 'react'
+import { toast, ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import ThemeToggle from './components/ThemeToggle'
+import { ThemeProvider } from './contexts/ThemeContext'
 import api from './services/api'
 
 // Lazy load components
 const Auth = lazy(() => import('./components/Auth'))
 const History = lazy(() => import('./components/History'))
+const Dashboard = lazy(() => import('./components/Dashboard'))
+const BulkScanner = lazy(() => import('./components/BulkScanner'))
+const Profile = lazy(() => import('./components/Profile'))
 
 // Loading component
 const Loading = () => (
@@ -20,7 +27,7 @@ function App() {
   const [result, setResult] = useState(null)
   const [error, setError] = useState(null)
   const [user, setUser] = useState(null)
-  const [showHistory, setShowHistory] = useState(false)
+  const [activeView, setActiveView] = useState('scanner') // scanner, history, dashboard, bulk
   const [urlInfo, setUrlInfo] = useState(null)
   const [loadingInfo, setLoadingInfo] = useState(false)
 
@@ -37,13 +44,21 @@ function App() {
 
   const handleLogin = (userData) => {
     setUser(userData)
+    toast.success(`Welcome back, ${userData.username}!`, {
+      position: "top-right",
+      autoClose: 3000,
+    })
   }
 
   const handleLogout = () => {
     localStorage.removeItem('token')
     localStorage.removeItem('username')
     setUser(null)
-    setShowHistory(false)
+    setActiveView('scanner')
+    toast.info('Logged out successfully', {
+      position: "top-right",
+      autoClose: 2000,
+    })
   }
 
   // Debounce function to limit API calls
@@ -151,6 +166,10 @@ function App() {
     const formattedUrl = formatAndValidateUrl(url);
     if (!formattedUrl) {
       setError('Please enter a valid website address');
+      toast.error('Please enter a valid website address', {
+        position: "top-right",
+        autoClose: 3000,
+      });
       return;
     }
 
@@ -161,9 +180,27 @@ function App() {
     try {
       const response = await api.post('/api/predict', { url: formattedUrl });
       setResult(response.data)
+      
+      // Show toast notification based on result
+      if (response.data.is_phishing) {
+        toast.warning('⚠️ Potential phishing site detected!', {
+          position: "top-right",
+          autoClose: 5000,
+        });
+      } else {
+        toast.success('✓ Website appears to be safe', {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
     } catch (err) {
       console.error('URL check error:', err);
-      setError(err.response?.data?.error || 'An error occurred while checking the URL');
+      const errorMsg = err.response?.data?.error || 'An error occurred while checking the URL';
+      setError(errorMsg);
+      toast.error(errorMsg, {
+        position: "top-right",
+        autoClose: 4000,
+      });
     } finally {
       setLoading(false)
     }
@@ -229,6 +266,11 @@ function App() {
     
     // Save the PDF
     doc.save(`phishshield-report-${new Date().getTime()}.pdf`)
+    
+    toast.success('Report downloaded successfully!', {
+      position: "top-right",
+      autoClose: 2000,
+    });
   }
 
   const exportHistory = async () => {
@@ -261,45 +303,140 @@ function App() {
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
+      
+      toast.success('History exported successfully!', {
+        position: "top-right",
+        autoClose: 2000,
+      });
     } catch (err) {
       console.error('Export history error:', err);
       setError('Failed to export history');
+      toast.error('Failed to export history', {
+        position: "top-right",
+        autoClose: 3000,
+      });
     }
   };
 
-  return (
-    <div className="min-h-screen bg-background text-foreground">
-      <div className="container mx-auto px-4 py-8">
-        {!user ? (
-          <Suspense fallback={<Loading />}>
-            <Auth onLogin={handleLogin} />
-          </Suspense>
-        ) : (
-          <div>
-            <div className="flex justify-between items-center mb-8">
-              <h1 className="text-4xl font-bold cyberpunk-text">PhishShield</h1>
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => setShowHistory(!showHistory)}
-                  className="cyberpunk-button px-4 py-2 rounded"
-                >
-                  {showHistory ? 'Check URL' : 'View History'}
-                </button>
-                <button
-                  onClick={handleLogout}
-                  className="cyberpunk-button-secondary px-4 py-2 rounded flex items-center gap-2"
-                >
-                  <LogOut size={18} />
-                  Logout
-                </button>
-              </div>
-            </div>
+  const handleBulkScanComplete = (results) => {
+    const phishingCount = results.filter(r => r.is_phishing && !r.error).length;
+    const safeCount = results.filter(r => !r.is_phishing && !r.error).length;
+    
+    toast.success(`Bulk scan complete! ${safeCount} safe, ${phishingCount} phishing detected`, {
+      position: "top-right",
+      autoClose: 5000,
+    });
+  };
 
-            {showHistory ? (
+  return (
+    <ThemeProvider>
+      <div className="min-h-screen bg-background text-foreground">
+        <ToastContainer
+          position="top-right"
+          autoClose={3000}
+          hideProgressBar={false}
+          newestOnTop
+          closeOnClick
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="colored"
+        />
+        <div className="container mx-auto px-4 py-8">
+          {!user ? (
+            <Suspense fallback={<Loading />}>
+              <Auth onLogin={handleLogin} />
+            </Suspense>
+          ) : (
+            <div>
+              <div className="flex justify-between items-center mb-8">
+                <button 
+                  onClick={() => setActiveView('scanner')}
+                  className="text-4xl font-bold cyberpunk-text hover:opacity-80 transition-opacity cursor-pointer"
+                >
+                  PhishShield
+                </button>
+                <div className="flex items-center gap-4">
+                  <ThemeToggle />
+                  <button
+                    onClick={handleLogout}
+                    className="cyberpunk-button-secondary px-4 py-2 rounded flex items-center gap-2"
+                  >
+                    <LogOut size={18} />
+                    Logout
+                  </button>
+                </div>
+              </div>
+
+              {/* Navigation Tabs */}
+              <div className="cyberpunk-card rounded-lg p-2 mb-6">
+                <div className="flex gap-2 flex-wrap">
+                  <button
+                    onClick={() => setActiveView('dashboard')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded transition-all ${
+                      activeView === 'dashboard'
+                        ? 'bg-accent text-accent-foreground'
+                        : 'hover:bg-accent/20'
+                    }`}
+                  >
+                    <BarChart3 size={18} />
+                    <span>Dashboard</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveView('scanner')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded transition-all ${
+                      activeView === 'scanner'
+                        ? 'bg-accent text-accent-foreground'
+                        : 'hover:bg-accent/20'
+                    }`}
+                  >
+                    <Search size={18} />
+                    <span>URL Scanner</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveView('bulk')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded transition-all ${
+                      activeView === 'bulk'
+                        ? 'bg-accent text-accent-foreground'
+                        : 'hover:bg-accent/20'
+                    }`}
+                  >
+                    <Upload size={18} />
+                    <span>Bulk Scanner</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveView('history')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded transition-all ${
+                      activeView === 'history'
+                        ? 'bg-accent text-accent-foreground'
+                        : 'hover:bg-accent/20'
+                    }`}
+                  >
+                    <HistoryIcon size={18} />
+                    <span>History</span>
+                  </button>
+                  <button
+                    onClick={() => setActiveView('profile')}
+                    className={`flex items-center gap-2 px-4 py-2 rounded transition-all ${
+                      activeView === 'profile'
+                        ? 'bg-accent text-accent-foreground'
+                        : 'hover:bg-accent/20'
+                    }`}
+                  >
+                    <User size={18} />
+                    <span>Profile</span>
+                  </button>
+                </div>
+              </div>
+
+              {/* Content Area */}
               <Suspense fallback={<Loading />}>
-                <History user={user} />
-              </Suspense>
-            ) : (
+                {activeView === 'dashboard' && <Dashboard user={user} />}
+                {activeView === 'bulk' && <BulkScanner user={user} onScanComplete={handleBulkScanComplete} />}
+                {activeView === 'history' && <History user={user} />}
+                {activeView === 'profile' && <Profile user={user} />}
+                {activeView === 'scanner' && (
               <div className="cyberpunk-card rounded-lg p-6 max-w-2xl mx-auto">
                 <div className="space-y-4">
                   <div className="flex gap-4">
@@ -452,18 +589,6 @@ function App() {
                     </div>
                   )}
 
-                  {showHistory && (
-                    <div className="mt-4 flex justify-end">
-                      <button
-                        onClick={exportHistory}
-                        className="cyberpunk-button px-4 py-2 rounded flex items-center gap-2"
-                      >
-                        <Download size={18} />
-                        Export History
-                      </button>
-                    </div>
-                  )}
-
                   {urlInfo && !urlInfo.error && (
                     <div className="mt-4 cyberpunk-border bg-black/20 p-3 rounded">
                       <div className="flex items-center gap-2 text-accent mb-2">
@@ -497,11 +622,13 @@ function App() {
                   )}
                 </div>
               </div>
-            )}
-          </div>
-        )}
+                )}
+              </Suspense>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
+    </ThemeProvider>
   );
 }
 

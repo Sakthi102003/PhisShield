@@ -47,6 +47,28 @@
     --input: 210 100% 50%;
     --ring: 210 100% 50%;
   }
+
+  [data-theme="light"] {
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+    --primary: 210 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 180 100% 35%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+    --accent: 180 100% 35%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 210 100% 50%;
+  }
 }
 
 @layer base {
@@ -56,6 +78,7 @@
   body {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
   
   [data-theme="dark"] body {
@@ -69,24 +92,39 @@
         rgba(0, 120, 255, 0.05) 4px
       );
   }
+
+  [data-theme="light"] body {
+    background: linear-gradient(to bottom, #ffffff, #f0f9ff);
+  }
 }
 
 /* Modern tech styles */
 .cyberpunk-text {
   letter-spacing: 0.05em;
   color: hsl(var(--foreground));
+  transition: all 0.3s ease;
 }
 
 [data-theme="dark"] .cyberpunk-text {
   text-shadow: 0 0 8px rgba(0, 120, 255, 0.3);
 }
 
+[data-theme="light"] .cyberpunk-text {
+  color: hsl(var(--primary));
+  font-weight: 600;
+}
+
 .cyberpunk-border {
   border: 1px solid hsl(var(--border));
+  transition: all 0.3s ease;
 }
 
 [data-theme="dark"] .cyberpunk-border {
   box-shadow: 0 0 8px rgba(0, 120, 255, 0.2);
+}
+
+[data-theme="light"] .cyberpunk-border {
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 .cyberpunk-button {
@@ -103,6 +141,10 @@
   background: linear-gradient(45deg, #0078ff, #00b4d8);
 }
 
+[data-theme="light"] .cyberpunk-button {
+  background: linear-gradient(45deg, #0078ff, #0096c7);
+}
+
 .cyberpunk-button:hover {
   opacity: 0.9;
   transform: translateY(-1px);
@@ -112,10 +154,30 @@
   box-shadow: 0 0 15px rgba(0, 120, 255, 0.4);
 }
 
+[data-theme="light"] .cyberpunk-button:hover {
+  box-shadow: 0 4px 12px rgba(0, 120, 255, 0.3);
+}
+
+.cyberpunk-button-secondary {
+  background: transparent;
+  border: 1px solid hsl(var(--border));
+  color: hsl(var(--foreground));
+  text-transform: uppercase;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+}
+
+.cyberpunk-button-secondary:hover {
+  background: hsl(var(--accent));
+  color: hsl(var(--accent-foreground));
+}
+
 .cyberpunk-card {
   background: hsl(var(--card));
   border: 1px solid hsl(var(--border));
   color: hsl(var(--card-foreground));
+  transition: all 0.3s ease;
 }
 
 [data-theme="dark"] .cyberpunk-card {
@@ -124,16 +186,28 @@
   box-shadow: 0 0 12px rgba(0, 120, 255, 0.15);
 }
 
+[data-theme="light"] .cyberpunk-card {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
 .cyberpunk-input {
   background: hsl(var(--background));
   border: 1px solid hsl(var(--input));
   color: hsl(var(--foreground));
+  transition: all 0.3s ease;
 }
 
 [data-theme="dark"] .cyberpunk-input {
   background: rgba(0, 0, 0, 0.8);
   border: 1px solid #0078ff;
   box-shadow: 0 0 8px rgba(0, 120, 255, 0.1);
+}
+
+[data-theme="light"] .cyberpunk-input {
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid #d0d0d0;
 }
 
 .cyberpunk-input:focus {
@@ -143,4 +217,31 @@
 
 [data-theme="dark"] .cyberpunk-input:focus {
   box-shadow: 0 0 12px rgba(0, 120, 255, 0.2);
+}
+
+[data-theme="light"] .cyberpunk-input:focus {
+  box-shadow: 0 0 0 3px rgba(0, 120, 255, 0.1);
+  border-color: hsl(var(--primary));
+} 
+
+/* Toast styles */
+.Toastify__toast {
+  font-family: inherit;
+}
+
+[data-theme="dark"] .Toastify__toast {
+  background: rgba(0, 0, 0, 0.9);
+  border: 1px solid #0078ff;
+  box-shadow: 0 0 12px rgba(0, 120, 255, 0.3);
+  color: white;
+}
+
+[data-theme="light"] .Toastify__toast {
+  background: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  color: #222;
+}
+
+.Toastify__progress-bar {
+  background: linear-gradient(45deg, #0078ff, #00b4d8) !important;
 } 

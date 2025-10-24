@@ -19,6 +19,7 @@ from backend.utils.auth import bcrypt, generate_token, token_required
 from backend.utils.logger import log_error, logger
 from backend.utils.url_features import (ESSENTIAL_FEATURES,
                                         get_essential_features)
+from backend.utils.trusted_domains import is_trusted_domain
 
 app = Flask(__name__)
 
@@ -29,6 +30,14 @@ CORS(app,
      supports_credentials=True,
      allow_headers=['Content-Type', 'Authorization'],
      methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+
+# Add COOP and COEP headers for Firebase popup authentication
+@app.after_request
+def add_security_headers(response):
+    # Allow popups for Firebase authentication
+    response.headers['Cross-Origin-Opener-Policy'] = 'same-origin-allow-popups'
+    response.headers['Cross-Origin-Embedder-Policy'] = 'unsafe-none'
+    return response
 
 # Configuration
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'your-secret-key-here')  # Change in production
@@ -144,6 +153,126 @@ def login():
         log_error(e, "Login failed")
         return jsonify({'error': 'Login failed'}), 500
 
+@app.route('/api/auth/google', methods=['POST'])
+def google_auth():
+    try:
+        data = request.get_json()
+        uid = data.get('uid')
+        email = data.get('email')
+        display_name = data.get('displayName')
+        photo_url = data.get('photoURL')
+
+        if not uid or not email:
+            return jsonify({'error': 'Missing required fields'}), 400
+
+        # Check if user already exists by email or google_uid
+        user = User.query.filter(
+            (User.email == email) | (User.google_uid == uid)
+        ).first()
+
+        if user:
+            # Update user info if needed (photo might have changed)
+            if not user.photo_url and photo_url:
+                user.photo_url = photo_url
+            if not user.display_name and display_name:
+                user.display_name = display_name
+            if not user.google_uid:
+                user.google_uid = uid
+                user.auth_provider = 'google'
+            db.session.commit()
+            
+            # User exists, just log them in
+            token = generate_token(user.id)
+            return jsonify({
+                'token': token,
+                'username': user.username
+            }), 200
+        else:
+            # Create new user with Google data
+            # Use display_name or email prefix as username
+            username = display_name if display_name else email.split('@')[0]
+            
+            # Make sure username is unique
+            base_username = username
+            counter = 1
+            while User.query.filter_by(username=username).first():
+                username = f"{base_username}{counter}"
+                counter += 1
+
+            # Create user without password (Google authenticated)
+            # Use a random hash as placeholder since password is not needed
+            import secrets
+            random_password = secrets.token_urlsafe(32)
+            hashed_password = bcrypt.generate_password_hash(random_password).decode('utf-8')
+            
+            new_user = User(
+                username=username,
+                email=email,
+                password_hash=hashed_password,
+                display_name=display_name,
+                photo_url=photo_url,
+                auth_provider='google',
+                google_uid=uid
+            )
+            db.session.add(new_user)
+            db.session.commit()
+
+            # Generate token
+            token = generate_token(new_user.id)
+            return jsonify({
+                'token': token,
+                'username': new_user.username
+            }), 201
+    except Exception as e:
+        log_error(e, "Google authentication failed")
+        return jsonify({'error': 'Google authentication failed'}), 500
+
+@app.route('/api/profile', methods=['GET'])
+@token_required
+def get_profile(current_user):
+    try:
+        return jsonify({
+            'id': current_user.id,
+            'username': current_user.username,
+            'email': current_user.email,
+            'display_name': current_user.display_name,
+            'photo_url': current_user.photo_url,
+            'auth_provider': current_user.auth_provider,
+            'created_at': current_user.created_at.isoformat(),
+            'total_scans': len(current_user.url_checks)
+        }), 200
+    except Exception as e:
+        log_error(e, "Failed to fetch profile")
+        return jsonify({'error': 'Failed to fetch profile'}), 500
+
+@app.route('/api/profile', methods=['PUT'])
+@token_required
+def update_profile(current_user):
+    try:
+        data = request.get_json()
+        
+        # Update allowed fields
+        if 'display_name' in data:
+            current_user.display_name = data['display_name']
+        
+        if 'username' in data and data['username'] != current_user.username:
+            # Check if username is already taken
+            existing_user = User.query.filter_by(username=data['username']).first()
+            if existing_user:
+                return jsonify({'error': 'Username already taken'}), 400
+            current_user.username = data['username']
+        
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Profile updated successfully',
+            'username': current_user.username,
+            'display_name': current_user.display_name
+        }), 200
+    except Exception as e:
+        log_error(e, "Failed to update profile")
+        return jsonify({'error': 'Failed to update profile'}), 500
+
 @app.route('/api/history', methods=['GET'])
 @token_required
 def get_history(current_user):
@@ -173,6 +302,33 @@ def predict(current_user):
         if not url:
             logger.warning("Prediction attempt with missing URL")
             return jsonify({"error": "URL is required"}), 400
+        
+        # Check if domain is trusted first
+        try:
+            parsed_url = urlparse(url)
+            domain = parsed_url.netloc.lower()
+            if is_trusted_domain(domain):
+                logger.info(f"URL from trusted domain: {domain}")
+                # Store the check in history
+                url_check = URLCheck(
+                    url=url,
+                    is_phishing=False,
+                    confidence=0.99,  # High confidence for trusted domains
+                    features={'domain_trusted': True, 'domain': domain},
+                    user_id=current_user.id
+                )
+                db.session.add(url_check)
+                db.session.commit()
+                
+                return jsonify({
+                    "is_phishing": False,
+                    "confidence": 0.99,
+                    "features": {'domain_trusted': True, 'domain': domain},
+                    "reason": "Trusted domain"
+                }), 200
+        except Exception as e:
+            log_error(e, f"Error checking trusted domain for URL: {url}")
+            # Continue with normal prediction if trust check fails
         
         # Extract essential features from URL
         try:
@@ -261,6 +417,188 @@ def predict(current_user):
     except Exception as e:
         log_error(e, f"Unexpected error during prediction: {str(e)}")
         return jsonify({"error": str(e)}), 500
+
+@app.route('/api/predict/bulk', methods=['POST'])
+@token_required
+def predict_bulk(current_user):
+    try:
+        data = request.get_json()
+        urls = data.get('urls', [])
+        
+        if not urls or not isinstance(urls, list):
+            return jsonify({"error": "URLs array is required"}), 400
+        
+        if len(urls) > 100:  # Limit to 100 URLs per request
+            return jsonify({"error": "Maximum 100 URLs allowed per request"}), 400
+        
+        results = []
+        
+        for url in urls:
+            try:
+                # Check if domain is trusted first
+                try:
+                    parsed_url = urlparse(url)
+                    domain = parsed_url.netloc.lower()
+                    if is_trusted_domain(domain):
+                        logger.info(f"Bulk scan: URL from trusted domain: {domain}")
+                        # Store the check in history
+                        url_check = URLCheck(
+                            url=url,
+                            is_phishing=False,
+                            confidence=0.99,
+                            features={'domain_trusted': True, 'domain': domain},
+                            user_id=current_user.id
+                        )
+                        db.session.add(url_check)
+                        
+                        results.append({
+                            'url': url,
+                            'is_phishing': False,
+                            'confidence': 0.99,
+                            'features': {'domain_trusted': True, 'domain': domain}
+                        })
+                        continue  # Skip ML prediction for trusted domains
+                except Exception as e:
+                    log_error(e, f"Error checking trusted domain in bulk scan: {url}")
+                    # Continue with normal prediction if trust check fails
+                
+                # Extract features
+                features = get_essential_features(url)
+                
+                # Ensure all expected features are present
+                for feature in ESSENTIAL_FEATURES:
+                    if feature not in features:
+                        features[feature] = -1
+                        
+                # Convert features to the expected format
+                feature_vector = [features[feature] for feature in ESSENTIAL_FEATURES]
+                
+                if model is None or scaler is None:
+                    results.append({
+                        'url': url,
+                        'error': 'Model not loaded'
+                    })
+                    continue
+                
+                # Convert feature vector to numpy array and scale
+                feature_vector = np.array(feature_vector).reshape(1, -1)
+                scaled_features = scaler.transform(feature_vector)
+                
+                # Make prediction
+                prediction = model.predict(scaled_features)[0]
+                probability = model.predict_proba(scaled_features)[0]
+                
+                is_phishing = bool(prediction)
+                confidence = float(probability[1] if is_phishing else probability[0])
+                
+                # Adjust threshold
+                if is_phishing and confidence < 0.6:
+                    is_phishing = False
+                    confidence = float(probability[0])
+                
+                # Store the check in history
+                url_check = URLCheck(
+                    url=url,
+                    is_phishing=is_phishing,
+                    confidence=confidence,
+                    features=features,
+                    user_id=current_user.id
+                )
+                db.session.add(url_check)
+                
+                results.append({
+                    'url': url,
+                    'is_phishing': is_phishing,
+                    'confidence': confidence,
+                    'features': features
+                })
+                
+            except Exception as e:
+                log_error(e, f"Error processing URL in bulk scan: {url}")
+                results.append({
+                    'url': url,
+                    'error': str(e)
+                })
+        
+        # Commit all URL checks at once
+        db.session.commit()
+        
+        return jsonify({
+            'results': results,
+            'total': len(urls),
+            'successful': len([r for r in results if 'error' not in r])
+        }), 200
+        
+    except Exception as e:
+        log_error(e, "Bulk scan failed")
+        return jsonify({'error': str(e)}), 500
+
+@app.route('/api/statistics', methods=['GET'])
+@token_required
+def get_statistics(current_user):
+    try:
+        # Get all URL checks for the current user
+        checks = URLCheck.query.filter_by(user_id=current_user.id).all()
+        
+        if not checks:
+            return jsonify({
+                'total_scans': 0,
+                'safe_count': 0,
+                'phishing_count': 0,
+                'average_confidence': 0,
+                'recent_activity': [],
+                'latest_scans': []
+            }), 200
+        
+        total_scans = len(checks)
+        phishing_count = sum(1 for check in checks if check.is_phishing)
+        safe_count = total_scans - phishing_count
+        
+        # Calculate average confidence
+        average_confidence = sum(check.confidence for check in checks) / total_scans * 100
+        
+        # Get recent activity (last 7 days)
+        from datetime import datetime, timedelta
+        from collections import defaultdict
+        
+        today = datetime.now().date()
+        activity_data = defaultdict(int)
+        
+        for i in range(7):
+            date = today - timedelta(days=6-i)
+            activity_data[date.strftime('%m/%d')] = 0
+        
+        for check in checks:
+            check_date = check.checked_at.date()
+            if (today - check_date).days < 7:
+                activity_data[check_date.strftime('%m/%d')] += 1
+        
+        recent_activity = [
+            {'date': date, 'scans': count}
+            for date, count in activity_data.items()
+        ]
+        
+        # Get latest 5 scans
+        latest_checks = sorted(checks, key=lambda x: x.checked_at, reverse=True)[:5]
+        latest_scans = [{
+            'url': check.url,
+            'is_phishing': check.is_phishing,
+            'confidence': check.confidence,
+            'checked_at': check.checked_at.isoformat()
+        } for check in latest_checks]
+        
+        return jsonify({
+            'total_scans': total_scans,
+            'safe_count': safe_count,
+            'phishing_count': phishing_count,
+            'average_confidence': average_confidence,
+            'recent_activity': recent_activity,
+            'latest_scans': latest_scans
+        }), 200
+        
+    except Exception as e:
+        log_error(e, "Failed to fetch statistics")
+        return jsonify({'error': 'Failed to fetch statistics'}), 500
 
 @app.route('/api/url-info', methods=['GET'])
 @token_required

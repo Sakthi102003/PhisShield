@@ -1,0 +1,4 @@
+# Export files (PDFs, CSVs, etc.)
+*.pdf
+*.csv
+*.xlsx

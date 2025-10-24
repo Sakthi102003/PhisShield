@@ -6,6 +6,8 @@ import requests
 import tldextract
 from bs4 import BeautifulSoup, PageElement, Tag
 
+from backend.utils.trusted_domains import is_trusted_domain
+
 # Essential features for optimized phishing detection
 ESSENTIAL_FEATURES = [
     'url_length', 'num_directories', 'query_length', 'num_dots', 'num_hyphens', 
@@ -17,8 +19,19 @@ def extract_features(url: str) -> Dict[str, Union[int, float]]:
     """
     Extract features from a URL for phishing detection.
     Returns a dictionary of optimized features for phishing detection.
+    Also includes domain trust information.
     """
-    return get_essential_features(url)
+    features = get_essential_features(url)
+    
+    # Add domain trust check
+    try:
+        parsed_url = urlparse(url)
+        domain = parsed_url.netloc.lower()
+        features['is_trusted_domain'] = is_trusted_domain(domain)
+    except Exception:
+        features['is_trusted_domain'] = False
+    
+    return features
 def get_website_content(url: str) -> Optional[Dict[str, Any]]:
     """
     Attempt to fetch website content and extract additional features.

@@ -161,3 +161,80 @@
 2025-06-05 17:58:41,119 - phishshield - INFO - Model loaded successfully
 2025-06-05 17:58:45,150 - phishshield - INFO - Fetching URL info for: https://youtube.com/watch?v=EM2YhaeDO1c
 2025-06-05 17:58:46,404 - phishshield - INFO - Prediction complete for https://youtube.com/watch?v=EM2YhaeDO1c: legitimate
+2025-10-24 18:34:54,981 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 18:35:28,742 - phishshield - INFO - Model loaded successfully
+2025-10-24 18:35:31,046 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 18:35:33,695 - phishshield - INFO - Model loaded successfully
+2025-10-24 18:35:41,472 - phishshield.error - ERROR - 404 Not Found: The requested URL was not found on the server. If you entered the URL manually please check your spelling and try again. - Additional Info: Route not found: http://127.0.0.1:5000/favicon.ico
+2025-10-24 18:38:27,076 - phishshield - INFO - Login attempt for username: sakthi102003
+2025-10-24 18:38:29,053 - phishshield - INFO - Login attempt for username: sakthi102003
+2025-10-24 18:38:35,529 - phishshield - INFO - Login attempt for username: sakthi102003
+2025-10-24 18:38:46,079 - phishshield - INFO - Fetching URL info for: https://youtube.com/watch?v=nTCc6y94PtQ
+2025-10-24 18:38:48,486 - phishshield - INFO - Prediction complete for https://youtube.com/watch?v=nTCc6y94PtQ: legitimate
+2025-10-24 18:43:32,514 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 18:43:36,906 - phishshield - INFO - Model loaded successfully
+2025-10-24 18:43:39,661 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 18:43:42,688 - phishshield - INFO - Model loaded successfully
+2025-10-24 18:43:42,929 - phishshield - INFO - Prediction complete for https://notion.so/28ebac6d4dad809bbc77f7b93c2a608b?v=28ebac6d4dad81ce94b1000c5c660178: legitimate
+2025-10-24 18:46:41,098 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 18:46:43,970 - phishshield - INFO - Model loaded successfully
+2025-10-24 18:55:29,902 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 18:55:32,436 - phishshield - INFO - Model loaded successfully
+2025-10-24 18:55:33,858 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 18:55:35,778 - phishshield - INFO - Model loaded successfully
+2025-10-24 18:56:08,514 - phishshield - INFO - Fetching URL info for: https://cricbuzz.com
+2025-10-24 18:56:09,479 - phishshield - INFO - Prediction complete for https://cricbuzz.com: legitimate
+2025-10-24 18:57:46,580 - phishshield - INFO - Fetching URL info for: https://aistudio.google.com/app/api-keys
+2025-10-24 18:57:47,088 - phishshield - INFO - Prediction complete for https://aistudio.google.com/app/api-keys: phishing
+2025-10-24 19:00:33,125 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:00:36,501 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:00:40,199 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:00:42,496 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:00:54,527 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:00:56,445 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:01:00,516 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:01:02,534 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:01:25,865 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:01:27,825 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:01:39,897 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:01:41,676 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:01:48,750 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:01:50,743 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:01:54,816 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:01:56,677 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:03:58,336 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:04:00,056 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:04:02,014 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:04:05,185 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:12:07,151 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:12:09,762 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:14:44,555 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:14:47,006 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:15:02,508 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:15:04,404 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:16:55,655 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:16:58,549 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:17:00,193 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:17:02,791 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:18:56,210 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:18:58,172 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:19:10,360 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:19:12,372 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:19:20,867 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:19:22,851 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:19:27,981 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:19:29,961 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:19:41,158 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:19:43,381 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:19:52,810 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:19:54,674 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:20:06,581 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:20:08,308 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:21:42,572 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:21:44,907 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:24:33,011 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:24:35,652 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:24:37,059 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-10-24 19:24:38,661 - phishshield - INFO - Model loaded successfully
+2025-10-24 19:25:40,890 - phishshield - INFO - Fetching URL info for: https://youtube.com/
+2025-10-24 19:25:42,691 - phishshield - INFO - URL from trusted domain: youtube.com
