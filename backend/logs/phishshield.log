@@ -238,3 +238,9 @@
 2025-10-24 19:24:38,661 - phishshield - INFO - Model loaded successfully
 2025-10-24 19:25:40,890 - phishshield - INFO - Fetching URL info for: https://youtube.com/
 2025-10-24 19:25:42,691 - phishshield - INFO - URL from trusted domain: youtube.com
+2025-12-11 11:17:31,134 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-12-11 11:17:55,039 - phishshield - INFO - Model loaded successfully
+2025-12-11 11:17:58,333 - phishshield - INFO - Loading model from: S:\PhisShield\model
+2025-12-11 11:18:02,035 - phishshield - INFO - Model loaded successfully
+2025-12-11 11:18:43,110 - phishshield - INFO - Fetching URL info for: https://canva.com/design/DAG5ayUBEek/kgzsgKZrTnwKAs9bF6Yf0w/edit?ui=e30
+2025-12-11 11:18:47,706 - phishshield - INFO - Prediction complete for https://canva.com/design/DAG5ayUBEek/kgzsgKZrTnwKAs9bF6Yf0w/edit?ui=e30: legitimate

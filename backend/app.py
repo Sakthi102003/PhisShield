@@ -1,10 +1,14 @@
 import os
 import sys
+import hashlib
 from datetime import datetime
 from urllib.parse import urlparse
 
 import requests
 from bs4 import BeautifulSoup
+from cachetools import TTLCache
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
 
 # Add the parent directory to sys.path to allow absolute imports
 sys.path.append(os.path.abspath(os.path.dirname(os.path.dirname(__file__))))
@@ -30,6 +34,30 @@ CORS(app,
      supports_credentials=True,
      allow_headers=['Content-Type', 'Authorization'],
      methods=['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'])
+
+# Rate Limiting Configuration
+# Defaults: 100 requests/minute for general, 30/minute for predictions
+RATE_LIMIT_DEFAULT = os.environ.get('RATE_LIMIT_DEFAULT', '100 per minute')
+RATE_LIMIT_PREDICT = os.environ.get('RATE_LIMIT_PREDICT', '30 per minute')
+RATE_LIMIT_BULK = os.environ.get('RATE_LIMIT_BULK', '10 per minute')
+
+limiter = Limiter(
+    app=app,
+    key_func=get_remote_address,
+    default_limits=[RATE_LIMIT_DEFAULT],
+    storage_uri="memory://",
+    strategy="fixed-window"
+)
+
+# URL Verdict Cache Configuration
+# Cache up to 1000 URL verdicts for 5 minutes (300 seconds)
+CACHE_MAX_SIZE = int(os.environ.get('CACHE_MAX_SIZE', '1000'))
+CACHE_TTL_SECONDS = int(os.environ.get('CACHE_TTL_SECONDS', '300'))
+url_verdict_cache = TTLCache(maxsize=CACHE_MAX_SIZE, ttl=CACHE_TTL_SECONDS)
+
+def get_url_cache_key(url: str) -> str:
+    """Generate a cache key for a URL using SHA256 hash."""
+    return hashlib.sha256(url.encode('utf-8')).hexdigest()
 
 # Add COOP and COEP headers for Firebase popup authentication
 @app.after_request
@@ -86,6 +114,15 @@ def internal_error(error):
     log_error(error, f"Internal server error on {request.url}")
     return jsonify({"error": "Internal server error"}), 500
 
+@app.errorhandler(429)
+def ratelimit_handler(error):
+    logger.warning(f"Rate limit exceeded for IP: {request.remote_addr}")
+    return jsonify({
+        "error": "Rate limit exceeded",
+        "message": "Too many requests. Please try again later.",
+        "retry_after": error.description
+    }), 429
+
 @app.route('/', methods=['GET'])
 def home():
     return jsonify({"message": "PhishShield API is running"}), 200
@@ -96,6 +133,16 @@ def health_check():
         log_error("Health check failed - model not loaded")
         return jsonify({"status": "unhealthy", "reason": "Model not loaded"}), 503
     return jsonify({"status": "healthy"}), 200
+
+@app.route('/api/cache/stats', methods=['GET'])
+def cache_stats():
+    """Return current cache statistics for monitoring."""
+    return jsonify({
+        "cache_size": len(url_verdict_cache),
+        "cache_max_size": CACHE_MAX_SIZE,
+        "cache_ttl_seconds": CACHE_TTL_SECONDS,
+        "utilization_percent": round(len(url_verdict_cache) / CACHE_MAX_SIZE * 100, 2)
+    }), 200
 
 @app.route('/api/auth/register', methods=['POST'])
 def register():
@@ -293,6 +340,7 @@ def get_history(current_user):
         return jsonify({'error': 'Failed to fetch history'}), 500
 
 @app.route('/api/predict', methods=['POST'])
+@limiter.limit(RATE_LIMIT_PREDICT)
 @token_required
 def predict(current_user):
     try:
@@ -303,12 +351,37 @@ def predict(current_user):
             logger.warning("Prediction attempt with missing URL")
             return jsonify({"error": "URL is required"}), 400
         
+        # Check cache first
+        cache_key = get_url_cache_key(url)
+        cached_result = url_verdict_cache.get(cache_key)
+        if cached_result is not None:
+            logger.info(f"Cache hit for URL: {url[:50]}...")
+            # Still store in history for user tracking
+            url_check = URLCheck(
+                url=url,
+                is_phishing=cached_result['is_phishing'],
+                confidence=cached_result['confidence'],
+                features=cached_result['features'],
+                user_id=current_user.id
+            )
+            db.session.add(url_check)
+            db.session.commit()
+            return jsonify({**cached_result, 'cached': True}), 200
+        
         # Check if domain is trusted first
         try:
             parsed_url = urlparse(url)
             domain = parsed_url.netloc.lower()
             if is_trusted_domain(domain):
                 logger.info(f"URL from trusted domain: {domain}")
+                result = {
+                    "is_phishing": False,
+                    "confidence": 0.99,
+                    "features": {'domain_trusted': True, 'domain': domain},
+                    "reason": "Trusted domain"
+                }
+                # Cache the trusted domain result
+                url_verdict_cache[cache_key] = result
                 # Store the check in history
                 url_check = URLCheck(
                     url=url,
@@ -411,6 +484,9 @@ def predict(current_user):
             "features": features
         }
         
+        # Cache the result for future requests
+        url_verdict_cache[cache_key] = response
+        
         logger.info(f"Prediction complete for {url}: {'phishing' if is_phishing else 'legitimate'}")
         return jsonify(response), 200
         
@@ -419,6 +495,7 @@ def predict(current_user):
         return jsonify({"error": str(e)}), 500
 
 @app.route('/api/predict/bulk', methods=['POST'])
+@limiter.limit(RATE_LIMIT_BULK)
 @token_required
 def predict_bulk(current_user):
     try:
@@ -432,15 +509,40 @@ def predict_bulk(current_user):
             return jsonify({"error": "Maximum 100 URLs allowed per request"}), 400
         
         results = []
+        cache_hits = 0
         
         for url in urls:
             try:
+                # Check cache first
+                cache_key = get_url_cache_key(url)
+                cached_result = url_verdict_cache.get(cache_key)
+                if cached_result is not None:
+                    cache_hits += 1
+                    # Store in history for user tracking
+                    url_check = URLCheck(
+                        url=url,
+                        is_phishing=cached_result['is_phishing'],
+                        confidence=cached_result['confidence'],
+                        features=cached_result['features'],
+                        user_id=current_user.id
+                    )
+                    db.session.add(url_check)
+                    results.append({**cached_result, 'url': url, 'cached': True})
+                    continue
+                
                 # Check if domain is trusted first
                 try:
                     parsed_url = urlparse(url)
                     domain = parsed_url.netloc.lower()
                     if is_trusted_domain(domain):
                         logger.info(f"Bulk scan: URL from trusted domain: {domain}")
+                        result = {
+                            'is_phishing': False,
+                            'confidence': 0.99,
+                            'features': {'domain_trusted': True, 'domain': domain}
+                        }
+                        # Cache the trusted domain result
+                        url_verdict_cache[cache_key] = result
                         # Store the check in history
                         url_check = URLCheck(
                             url=url,
@@ -506,6 +608,14 @@ def predict_bulk(current_user):
                 )
                 db.session.add(url_check)
                 
+                result = {
+                    'is_phishing': is_phishing,
+                    'confidence': confidence,
+                    'features': features
+                }
+                # Cache the result
+                url_verdict_cache[cache_key] = result
+                
                 results.append({
                     'url': url,
                     'is_phishing': is_phishing,
@@ -526,7 +636,8 @@ def predict_bulk(current_user):
         return jsonify({
             'results': results,
             'total': len(urls),
-            'successful': len([r for r in results if 'error' not in r])
+            'successful': len([r for r in results if 'error' not in r]),
+            'cache_hits': cache_hits
         }), 200
         
     except Exception as e:

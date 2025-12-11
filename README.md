@@ -20,6 +20,8 @@ PhishShield is a sophisticated web application that uses machine learning to det
 - **Security Status Indicators** - HTTPS verification and connection status
 - **Professional UI** - Modern cyberpunk-inspired design
 - **Mobile-Responsive** - Works seamlessly on all devices
+- **API Rate Limiting** - Protection against abuse and DDoS attacks
+- **URL Verdict Caching** - Faster responses for repeated URL scans
 
 ## 🛠️ Tech Stack
 
@@ -37,6 +39,8 @@ PhishShield is a sophisticated web application that uses machine learning to det
 ### Backend
 - Python 3.12
 - Flask
+- Flask-Limiter (API rate limiting)
+- Cachetools (TTL caching)
 - Scikit-learn
 - Pandas & NumPy
 
@@ -97,6 +101,17 @@ Phishing attacks continue to be one of the most prevalent cyber threats, with at
 - Fully styled components for both themes
 - Professional cyberpunk dark mode
 - Clean modern light mode
+
+### ⚡ Performance & API Protection
+- **URL Verdict Caching** - TTL cache stores up to 1000 URL verdicts for 5 minutes
+- **Instant cache hits** - Repeated scans return in ~1ms vs ~200-500ms
+- **Rate Limiting** - Per-IP request throttling to prevent abuse:
+  - 100 requests/minute (global default)
+  - 30 requests/minute (single URL prediction)
+  - 10 requests/minute (bulk scanning)
+- **429 responses** - Graceful handling when limits exceeded
+- **Cache stats endpoint** - Monitor cache utilization at `/api/cache/stats`
+- **Configurable via environment variables**
 
 ## 🚀 Installation & Setup
 
@@ -221,7 +236,6 @@ PhisShield/
 - Browser extension development
 - Integration with threat databases
 - Enhanced feature extraction
-- API rate limiting and caching
 - Multi-language support
 - Mobile app development
 - Real-time collaboration features
@@ -229,9 +243,12 @@ PhisShield/
 - Email notifications for threats
 - Account linking (add Google to existing account)
 - Two-factor authentication
+- SHAP explainability (per-feature verdict reasons)
+- Async bulk scanning with job queues
 - ~~Dark/Light theme toggle~~ ✅ **Implemented**
 - ~~Google Authentication~~ ✅ **Implemented**
 - ~~User Profile~~ ✅ **Implemented**
+- ~~API rate limiting and caching~~ ✅ **Implemented**
 
 ## 📝 License
 This project is licensed under the MIT License - see the LICENSE file for details.
